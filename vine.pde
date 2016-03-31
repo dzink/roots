@@ -1,6 +1,7 @@
 float treeGrowthRate = 103.2;
 static float leafColorChange = 1.5;
 int branches = 0;
+static boolean drawOutlines = true;
 
 class Leaf {
   PVector pos;
@@ -67,9 +68,9 @@ class Potato {
     scale(size*map(sin(pulse*PI), -1, 1, 6.8, 8.2)) ;
     tint(10 + 250*leafWither,255);
     fill(255);
-    stroke(0);
-    strokeWeight(1);
-    ellipse(0,0,10,15);
+    stroke(0, 100);
+    strokeWeight(0.25);
+    ellipse(0,0,3,5);
     noFill();
     popMatrix();
   }
@@ -116,10 +117,11 @@ class Branch
     curve = _curve;//pow(_curve * weight, 0.5);
     //println(curve);
     shrink = _shrink;
-    curveControl_end = new CurveControl(curve * random(-sHeight/3, sHeight/3), len * -sHeight/6, 90, 1 / sqrt(weight));
-    curveControl_start = new CurveControl(curve * random(-sHeight/3, sHeight/3), len * -sHeight/6, 140, 1 / sqrt(weight));
+    curveControl_end = new CurveControl(curve * random(-sHeight/3, sHeight/3), len * -sHeight/6, 90, 1 / sqrt(weight) + random(0.2, 0.3));
+    curveControl_start = new CurveControl(curve * random(-sHeight/3, sHeight/3), len * -sHeight/6, 140, 1 / sqrt(weight) + random(0.2, 0.3));
     end = new CurveControl(curve * random(-sHeight/3, sHeight/3), len * -sHeight/6, 100, 3);
-    col = color(randomizeColor(20,1.1), randomizeColor(80,1.4), randomizeColor(20 + 0.012 * weight,1.1));
+    //col = color(randomizeColor(20,1.1), randomizeColor(80,1.4), randomizeColor(20 + 0.012 * weight,1.1));
+    col = color(random(20, 40), 25, random(240, 255));
     len = sqrt(random(0.5,2));
     spawnLeaves(1);
     apicalCount = 0;
@@ -162,7 +164,7 @@ class Branch
   
   void spawnChild(int b, float _angle, float _weight) {
     if(weight > 0.8) {
-      Branch child = new Branch(b, pow(shrink, 3) * _weight, angle, curve, shrink, mutate);
+      Branch child = new Branch(b, sqrt(shrink) * _weight, angle, curve, shrink, mutate);
       child.joint.translate(0,len * sHeight/3);
       child.joint.rotate(_angle * random(PI * -angle,PI * angle));
       child.joint.scale(shrink);
@@ -214,15 +216,16 @@ class Branch
     if(drawBranches) {    
       float w = trunkScale*weight/virtscale;
       if (w>0) {
-        stroke(0, 255);
-    
-        strokeWeight(8+trunkScale * (weight*1.1)/virtscale);
-        
-        // draw a curve or a line
-        curve(curveControl_start.x(), curveControl_start.y(), 0,0, 0,len * sHeight/3, curveControl_end.x(), curveControl_end.y());
-        
-        //stroke(#443366, 255);
-        stroke(255);
+        if (drawOutlines) {
+          stroke(0, 100);
+      
+          strokeWeight(7+trunkScale * weight/virtscale);
+          
+          // draw a curve or a line
+          curve(curveControl_start.x(), curveControl_start.y(), 0,0, 0,len * sHeight/3, curveControl_end.x(), curveControl_end.y());
+        }
+        stroke(#443366, 255);
+        stroke(col);
         strokeWeight(6+trunkScale*weight/virtscale);
         curve(curveControl_start.x(), curveControl_start.y(), 0,0, 0,len * sHeight/3, curveControl_end.x(), curveControl_end.y());
         
@@ -252,7 +255,7 @@ class Branch
         //ellipse(0, leaf.y, 15,15);
       }
       if (potato != null) {
-        potato.draw();
+        //potato.draw();
       }
       popMatrix();
       popStyle();

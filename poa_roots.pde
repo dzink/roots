@@ -1,17 +1,3 @@
-/*
-A beautiful, complicated tree. Closer scrutiny reveals Potatoes which are growing on the tree as apples. A sack of Potatoes
-dressed as Isaac Newton sits at the foot of the tree. One of two Potato twins dangles precariously for a moment, detatches from
-its branch and, on a tiny rocket, embarks on a journey through the universe at the speed of light. All other Potatoes sprout eyes
-and wither on the tree or within the Isaac Newton suit, many detatching, following a natural curve through space and
-plonking onto the 'head' of Sir Newton. The tree grows thicker and taller, and eventually dies, its bark falling off, inundated
-by woodpeckers and termites. The Potato version of Isaac Newton now lies in a grave at the foot of the tree. Just then, the
-rocket returns, entering onto the scene from the opposite side as that from which it exited, suggesting that the universe is in some
-way globular. The Potato on the little rocket is still fresh and plump as if only a few days have passed. It seeks its withered
-twin among decay and regrowth.
-
-
-*/
-
 ArrayList<Plant> roots;
 
 boolean record = true;
@@ -19,8 +5,8 @@ float virtscale = 2;
 
 Plant tree;
 Plant bonusLeaves;
-float sWidth = 1600;
-float sHeight = 1200;
+float sWidth = 1024;
+float sHeight = 768;
 
 float targetFrameRate;
 float maxTreeGrowth = 0.85;
@@ -44,20 +30,16 @@ float vidpos = 0;
 
 void setup() {
 
-  size((int) (sWidth / virtscale), 250);
+  size((int) (sWidth / virtscale), (int) (sHeight / virtscale));
   
   
   colorMode(HSB, 255);
   if (record) {
-    frameRate(24);
     targetFrameRate = 24.0;
-
   } else {
-    frameRate(15);
-    targetFrameRate = 15.0;
-
+    targetFrameRate = 24.0;
   }
-
+  frameRate((int) targetFrameRate);
   //frame.removeNotify();
   //frame.setUndecorated(true);
     
@@ -75,13 +57,13 @@ void setup() {
   treeGrowthRate = 10.2;
   
   roots = new ArrayList<Plant>();
-  
-  randomSeed(662);
+  int plants = 7;
+  randomSeed(669);
   tree = new Plant(new PVector(sWidth/3,sHeight-500), 0.40, 1 * PI, 3, 328, 0.35,7.1, 0.88, 0);
   bonusLeaves = new Plant(new PVector(sWidth/3,sHeight), 0.40, PI, 1, 128, 0.35, 5.1, 0.85, 0);  
-  for(int i=0; i<6; i++) {
-    Plant p = new Plant(new PVector(sWidth*((i+2.1)/10),sHeight/-2 +500), 1.3, 0, 2, 128, 0.10,10.1, 0.8, 0);
-    for(int j = 0; j<5; j++) {
+  for(int i=0; i<plants; i++) {
+    Plant p = new Plant(new PVector(map(i, 0, plants - 1, sWidth * 0.1, sWidth * 0.9),sHeight/-2 + random(100, 300)), 0.75, 0, 1, 28, 0.90, 10.1, 0.9, 0.15);
+    for(int j = 0; j<9; j++) {
       p.spawnApical();
     }
     roots.add(p);
@@ -90,7 +72,7 @@ void setup() {
 }
 
 void draw() {
-  background(#554433);
+  background(#000000);
  
 
 
